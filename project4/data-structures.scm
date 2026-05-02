@@ -24,7 +24,9 @@
     ; ###### add a new value type for your vectors (and possible for queues)
     ; #####################################################
 
-    
+    (vec-val
+      (vec (list-of reference?)))
+
     ; #####################################################
     )
 
