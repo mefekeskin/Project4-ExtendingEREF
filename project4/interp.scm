@@ -113,9 +113,61 @@
         ; #####################################################
         ; ###### ENTER YOUR CODE HERE
         ; ###### value-of cases for new expressions, remember
-        ; ###### that you need to use memory functionalities. 
+        ; ###### that you need to use memory functionalities.
         ; #####################################################
 
+        (newvector-exp (exp1 exp2)
+          (let ((len (expval->num (value-of exp1 env)))
+                (val (value-of exp2 env)))
+            (let ((vec (make-vector len)))
+              (let loop ((i 0))
+                (if (= i len)
+                    (vec-val vec)
+                    (begin
+                      (vector-set! vec i (newref val))
+                      (loop (+ i 1))))))))
+
+        (read-vector-exp (exp1 exp2)
+          (let ((vec (expval->vec (value-of exp1 env)))
+                (idx (expval->num (value-of exp2 env))))
+            (deref (vector-ref vec idx))))
+
+        (update-vector-exp (exp1 exp2 exp3)
+          (let ((vec (expval->vec (value-of exp1 env)))
+                (idx (expval->num (value-of exp2 env)))
+                (val (value-of exp3 env)))
+            (begin
+              (setref! (vector-ref vec idx) val)
+              (num-val 23))))
+
+        (length-vector-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (num-val (vector-length vec))))
+
+        (swap-vector-exp (exp1 exp2 exp3)
+          (let ((vec (expval->vec (value-of exp1 env)))
+                (i (expval->num (value-of exp2 env)))
+                (j (expval->num (value-of exp3 env))))
+            (let ((ref-i (vector-ref vec i))
+                  (ref-j (vector-ref vec j)))
+              (let ((val-i (deref ref-i))
+                    (val-j (deref ref-j)))
+                (begin
+                  (setref! ref-i val-j)
+                  (setref! ref-j val-i)
+                  (num-val 23))))))
+
+        (copy-vector-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (let ((len (vector-length vec)))
+              (let ((new-vec (make-vector len)))
+                (let loop ((i 0))
+                  (if (= i len)
+                      (vec-val new-vec)
+                      (begin
+                        (vector-set! new-vec i
+                          (newref (deref (vector-ref vec i))))
+                        (loop (+ i 1)))))))))
 
         )))
 
