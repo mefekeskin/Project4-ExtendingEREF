@@ -77,6 +77,30 @@
       ; ###### define the grammar definitions for new expressions here
       ; #####################################################
 
+      (expression
+        ("newvector" "(" expression "," expression ")")
+        newvector-exp)
+
+      (expression
+        ("update-vector" "(" expression "," expression "," expression ")")
+        update-vector-exp)
+
+      (expression
+        ("read-vector" "(" expression "," expression ")")
+        read-vector-exp)
+
+      (expression
+        ("length-vector" "(" expression ")")
+        length-vector-exp)
+
+      (expression
+        ("swap-vector" "(" expression "," expression "," expression ")")
+        swap-vector-exp)
+
+      (expression
+        ("copy-vector" "(" expression ")")
+        copy-vector-exp)
+
       ; #####################################################
 
       ))

@@ -25,7 +25,7 @@
     ; #####################################################
 
     (vec-val
-      (vec (list-of reference?)))
+      (vec vector?))
 
     ; #####################################################
     )
@@ -55,6 +55,12 @@
       (cases expval v
 	(ref-val (ref) ref)
 	(else (expval-extractor-error 'reference v)))))
+
+  (define expval->vec
+    (lambda (v)
+      (cases expval v
+	(vec-val (vec) vec)
+	(else (expval-extractor-error 'vector v)))))
 
   (define expval-extractor-error
     (lambda (variant value)
