@@ -168,8 +168,85 @@
                         (vector-set! new-vec i
                           (newref (deref (vector-ref vec i))))
                         (loop (+ i 1)))))))))
+        (newqueue-exp (exp1)
+          (let ((cap (expval->num (value-of exp1 env))))
+            (let ((vec (make-vector (+ cap 3))))
+              (let loop ((i 0))
+                (if (= i (+ cap 3))
+                    (vec-val vec)
+                    (begin
+                      (vector-set! vec i (newref (num-val 0)))
+                      (loop (+ i 1))))))))
+
+        (enqueue-exp (exp1 exp2)
+          (let ((vec (expval->vec (value-of exp1 env)))
+                (val (value-of exp2 env)))
+            (let ((size (queue-size-of vec))
+                  (cap (queue-capacity-of vec)))
+              (if (= size cap)
+                  (eopl:error 'enqueue "stack overflow")
+                  (let ((rear (queue-rear-of vec)))
+                    (begin
+                      (setref! (vector-ref vec (+ 3 rear)) val)
+                      (setref! (vector-ref vec 2)
+                               (num-val (modulo (+ rear 1) cap)))
+                      (setref! (vector-ref vec 0)
+                               (num-val (+ size 1)))
+                      (num-val 23)))))))
+
+        (dequeue-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (let ((size (queue-size-of vec)))
+              (if (= size 0)
+                  (num-val -1)
+                  (let ((front (queue-front-of vec))
+                        (cap (queue-capacity-of vec)))
+                    (let ((val (deref (vector-ref vec (+ 3 front)))))
+                      (begin
+                        (setref! (vector-ref vec 1)
+                                 (num-val (modulo (+ front 1) cap)))
+                        (setref! (vector-ref vec 0)
+                                 (num-val (- size 1)))
+                        val)))))))
+
+        (queue-size-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (num-val (queue-size-of vec))))
+
+        (peek-queue-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (let ((front (queue-front-of vec)))
+              (deref (vector-ref vec (+ 3 front))))))
+
+        (queue-empty?-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (if (= (queue-size-of vec) 0)
+                (bool-val #t)
+                (bool-val #f))))
+
+        (print-queue-exp (exp1)
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (let ((size (queue-size-of vec))
+                  (front (queue-front-of vec))
+                  (cap (queue-capacity-of vec)))
+              (begin
+                (let loop ((i 0))
+                  (if (= i size)
+                      (newline)
+                      (begin
+                        (display
+                          (expval->num
+                            (deref
+                              (vector-ref vec
+                                (+ 3 (modulo (+ front i) cap))))))
+                        (if (= i (- size 1))
+                            (newline)
+                            (display " "))
+                        (loop (+ i 1)))))
+                (num-val 23)))))
 
         )))
+  
 
   ; ###### YOU CAN WRITE HELPER FUNCTIONS HERE
 
@@ -203,6 +280,28 @@
             (car p)
             (expval->printable (cadr p))))
         l)))
+  ;; Queue layout over Part A vectors (no globals; metadata lives in the vector):
+  ;;   index 0      -> current size
+  ;;   index 1      -> front pointer (offset within data area)
+  ;;   index 2      -> rear pointer  (offset within data area)
+  ;;   indices 3..  -> circular data area of length = capacity
+  ;; capacity = (length-vector vec) - 3
+
+  (define queue-size-of
+    (lambda (vec)
+      (expval->num (deref (vector-ref vec 0)))))
+
+  (define queue-front-of
+    (lambda (vec)
+      (expval->num (deref (vector-ref vec 1)))))
+
+  (define queue-rear-of
+    (lambda (vec)
+      (expval->num (deref (vector-ref vec 2)))))
+
+  (define queue-capacity-of
+    (lambda (vec)
+      (- (vector-length vec) 3)))
  
   )
   

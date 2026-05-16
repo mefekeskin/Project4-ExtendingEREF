@@ -100,6 +100,33 @@
       (expression
         ("copy-vector" "(" expression ")")
         copy-vector-exp)
+      (expression
+        ("newqueue" "(" expression ")")
+        newqueue-exp)
+
+      (expression
+        ("enqueue" "(" expression "," expression ")")
+        enqueue-exp)
+
+      (expression
+        ("dequeue" "(" expression ")")
+        dequeue-exp)
+
+      (expression
+        ("queue-size" "(" expression ")")
+        queue-size-exp)
+
+      (expression
+        ("peek-queue" "(" expression ")")
+        peek-queue-exp)
+
+      (expression
+        ("queue-empty?" "(" expression ")")
+        queue-empty?-exp)
+
+      (expression
+        ("print-queue" "(" expression ")")
+        print-queue-exp)
 
       ; #####################################################
 
