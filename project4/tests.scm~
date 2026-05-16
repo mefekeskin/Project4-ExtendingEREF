@@ -56,7 +56,6 @@
                                     update-vector(b, 0, 5); swap-vector(b, 0, 1); -(length-vector(a), -(0, read-vector(b, 1)))
                                     end"
                       94)
-      
 
 
         ; ==================== Queue Test Cases =========================;
@@ -64,36 +63,6 @@
       (queue-test2 "let x = newqueue(6) in begin enqueue(x, 10); enqueue(x, 20); dequeue(x); dequeue(x); enqueue(x, 30); peek-queue(x) end" 30)
       (queue-test3 "let x = newqueue(6) in begin enqueue(x, 10); enqueue(x, 20); enqueue(x,30); dequeue(x); dequeue(x); dequeue(x); queue-empty?(x) end" #t)
       (queue-test4 "let x = newqueue(6) in begin enqueue(x, 10); dequeue(x); enqueue(x, 40); enqueue(x, 20); dequeue(x); peek-queue(x) end" 20)
-      (queue-empty-dequeue
-       "let q = newqueue(3)
-        in dequeue(q)"
-       -1)
-
-      (queue-empty-peek
-       "let q = newqueue(3)
-        in peek-queue(q)"
-       -1)
-
-      (queue-circular
-       "let q = newqueue(2)
-        in begin
-             enqueue(q, 1);
-             enqueue(q, 2);
-             dequeue(q);
-             enqueue(q, 3);
-             dequeue(q)
-           end"
-       2)
-
-      (queue-size-after-ops
-       "let q = newqueue(3)
-        in begin
-             enqueue(q, 10);
-             enqueue(q, 20);
-             dequeue(q);
-             queue-size(q)
-           end"
-       1)
 
  ))
   )

@@ -215,37 +215,35 @@
 
         (peek-queue-exp (exp1)
           (let ((vec (expval->vec (value-of exp1 env))))
-           (if (= (queue-size-of vec) 0)
-            (num-val -1)
             (let ((front (queue-front-of vec)))
-               (deref (vector-ref vec (+ 3 front)))))))
+              (deref (vector-ref vec (+ 3 front))))))
 
         (queue-empty?-exp (exp1)
           (let ((vec (expval->vec (value-of exp1 env))))
             (if (= (queue-size-of vec) 0)
                 (bool-val #t)
                 (bool-val #f))))
-        
+
         (print-queue-exp (exp1)
-                         (let ((vec (expval->vec (value-of exp1 env))))
-                           (let ((size (queue-size-of vec))
-                                 (front (queue-front-of vec))
-                                 (cap (queue-capacity-of vec)))
-                             (begin
-                               (let loop ((i 0))
-                                 (if (= i size)
-                                     (newline)
-                                     (begin
-                                       (display
-                                        (expval->num
-                                         (deref
-                                          (vector-ref vec
-                                                      (+ 3 (modulo (+ front i) cap))))))
-                                       (if (= i (- size 1))
-                                           (display "")
-                                           (display " "))
-                                       (loop (+ i 1)))))
-                               (num-val 23)))))
+          (let ((vec (expval->vec (value-of exp1 env))))
+            (let ((size (queue-size-of vec))
+                  (front (queue-front-of vec))
+                  (cap (queue-capacity-of vec)))
+              (begin
+                (let loop ((i 0))
+                  (if (= i size)
+                      (newline)
+                      (begin
+                        (display
+                          (expval->num
+                            (deref
+                              (vector-ref vec
+                                (+ 3 (modulo (+ front i) cap))))))
+                        (if (= i (- size 1))
+                            (newline)
+                            (display " "))
+                        (loop (+ i 1)))))
+                (num-val 23)))))
 
         )))
   
